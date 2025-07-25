@@ -7,14 +7,15 @@
 
 // --- Definición de acciones de Tetris ---
 enum class Accion { ARRIBA, ABAJO, IZQUIERDA, DERECHA, ACCION1, ACCION2 };
+static std::unordered_map<Accion, bool> estadoAnterior;
 
 // Alias para Axis
 using Axis = sf::Joystick::Axis;
 
 // Mapeo acción → eje o botón
 static std::unordered_map<Accion, unsigned int> mapaBotones = {
-    {Accion::ABAJO,    static_cast<unsigned int>(Axis::PovY)},
-    {Accion::ARRIBA,     static_cast<unsigned int>(Axis::PovY)},
+    {Accion::ARRIBA,    static_cast<unsigned int>(Axis::PovY)},
+    {Accion::ABAJO,     static_cast<unsigned int>(Axis::PovY)},
     {Accion::IZQUIERDA, static_cast<unsigned int>(Axis::PovX)},
     {Accion::DERECHA,   static_cast<unsigned int>(Axis::PovX)},
     {Accion::ACCION1,   0},  // Botón 0
@@ -29,13 +30,19 @@ static float umbral = 50.f;
 
 // Inicializa los estados a false
 void inicializarEstados() {
-    for (auto &p : mapaBotones)
+    for (auto &p : mapaBotones) {
         estadoAccion[p.first] = false;
+        estadoAnterior[p.first] = false;
+    }
 }
+void actualizarEstadoAnterior() {
+    for (auto &p : estadoAccion)
+        estadoAnterior[p.first] = p.second;
+}
+
 
 // Actualiza estados leyendo directamente el estado actual del joystick
 void actualizarEstados() {
-    // Recorremos solo el primer joystick conectado
     for (unsigned int id = 0; id < sf::Joystick::Count; ++id) {
         if (!sf::Joystick::isConnected(id)) continue;
 
@@ -58,8 +65,6 @@ void actualizarEstados() {
         break;  // solo primer joystick
     }
 }
-
-
 
 void procesarEventos(sf::Window& ventana) {
     // Recorremos todos los eventos pendientes
@@ -85,6 +90,13 @@ void procesarEventos(sf::Window& ventana) {
     actualizarEstados();
 }
 
+bool fuePresionada(Accion a) {
+    bool presionadaAhora = estadoAccion[a];
+    bool presionadaAntes = estadoAnterior[a];
+
+    // Solo devolvemos true si antes no estaba presionada y ahora sí
+    return (!presionadaAntes && presionadaAhora);
+}
 
 // Consulta si la acción está activa
 bool estaPresionada(Accion a) {
