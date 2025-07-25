@@ -4,12 +4,22 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-// Incluimos tus gestores tal cual
+
+
 #include "gestorEntrada.cpp"
 #include "tableroFondo.cpp"
+#include "pieza.cpp"
+
 //Carga de clases
 
 TableroFondo fondo;
+//generador de piezas
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<int> dist(0, Pieza::NUM_TIPOS - 1);
+
+// Pieza activa aleatoria
+Pieza piezaActual(static_cast<Pieza::Tipo>(dist(gen)));
 
 
 void cargarFuente(sf::Font&font,const std::string& str ) {
@@ -56,6 +66,15 @@ int main() {
         if (fuePresionada(Accion::DERECHA))   std::cout << "ACCION: DERECHA\n";
         if (fuePresionada(Accion::ACCION1))   std::cout << "ACCION: ACCION1\n";
         if (fuePresionada(Accion::ACCION2))   std::cout << "ACCION: ACCION2\n";
+
+        if (fuePresionada(Accion::IZQUIERDA)) piezaActual.moverIzquierda();
+        if (fuePresionada(Accion::DERECHA))   piezaActual.moverDerecha();
+        if (fuePresionada(Accion::ABAJO))     piezaActual.moverAbajo();
+        if (fuePresionada(Accion::ACCION1))   piezaActual.rotarDerecha();
+
+
+
+
         //if (estaPresionada(Accion::ACCION2))   std::cout << "ACCION: ACCION2\n";
         actualizarEstadoAnterior();
         /*
@@ -71,6 +90,7 @@ int main() {
         //Aqui van los eventos de dibujo
         ventana.draw(text);
         fondo.dibujar(ventana);
+        piezaActual.dibujar(ventana, 50.f, 50.f, 24); // Offset x/y y tamaño por celda
 
         //Aqui terminan los eventos de dibujo
         ventana.display();
