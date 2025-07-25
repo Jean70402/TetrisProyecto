@@ -1,9 +1,8 @@
-// src/gestorEntrada.cpp
 
-#include <SFML/Window.hpp>
-#include <iostream>
+#include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include <optional>
+#include <string>
 
 // --- Definición de acciones de Tetris ---
 enum class Accion { ARRIBA, ABAJO, IZQUIERDA, DERECHA, ACCION1, ACCION2 };
@@ -39,7 +38,6 @@ void actualizarEstadoAnterior() {
     for (auto &p : estadoAccion)
         estadoAnterior[p.first] = p.second;
 }
-
 
 // Actualiza estados leyendo directamente el estado actual del joystick
 void actualizarEstados() {
@@ -91,15 +89,26 @@ void procesarEventos(sf::Window& ventana) {
 }
 
 bool fuePresionada(Accion a) {
-    bool presionadaAhora = estadoAccion[a];
-    bool presionadaAntes = estadoAnterior[a];
-
-    // Solo devolvemos true si antes no estaba presionada y ahora sí
-    return (!presionadaAntes && presionadaAhora);
+    return (!estadoAnterior[a] && estadoAccion[a]);
 }
 
 // Consulta si la acción está activa
 bool estaPresionada(Accion a) {
     auto it = estadoAccion.find(a);
     return (it != estadoAccion.end()) && it->second;
+}
+bool hayJoystickConectado() {
+    for (unsigned int i = 0; i < sf::Joystick::Count; ++i) {
+        if (sf::Joystick::isConnected(i))
+            return true;
+    }
+    return false;
+}
+std::string nombreJoystick() {
+    for (unsigned int i = 0; i < sf::Joystick::Count; ++i) {
+        if (sf::Joystick::isConnected(i)) {
+            return sf::Joystick::getIdentification(i).name;
+        }
+    }
+    return "Ninguno";
 }

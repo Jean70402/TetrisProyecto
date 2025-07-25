@@ -42,6 +42,12 @@ file(GLOB SFML_DLLS
         "${MINGW_BIN_DIR}/libgcc_s_seh-1.dll"
         "${MINGW_BIN_DIR}/libstdc++-6.dll"
 )
+# Copiar carpeta res completa al directorio del ejecutable tras build
+add_custom_command(TARGET tetris POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/res"
+        $<TARGET_FILE_DIR:tetris>/res
+)
 
 foreach(dll ${SFML_DLLS})
     add_custom_command(TARGET tetris POST_BUILD

@@ -2,10 +2,15 @@
 
 #include <SFML/Graphics.hpp>   // Para RenderWindow, clear() y display()
 #include <iostream>
-
+#include <string>
+#include <sstream>
 // Incluimos tus gestores tal cual
 #include "gestorEntrada.cpp"
-
+void cargarFuente(sf::Font&font,const std::string& str ) {
+    if (!font.openFromFile(str)) {
+        std::cerr<< "No se pudo cargar la fuente::"<<"!!!"<< std::endl;
+    }
+}
 int main() {
 
     sf::RenderWindow ventana(
@@ -15,11 +20,26 @@ int main() {
     );
 
     ventana.setFramerateLimit(60);
+    sf::Font font;
+    cargarFuente(font,"res/arial.ttf");
+    sf::Text text(font);
+    text.setString("Dispositivo:");
+    text.setPosition(sf::Vector2f(320,240));
+    text.setFillColor(sf::Color::White);
+    text.setCharacterSize(14);
+    text.setPosition({10.f, 10.f});
 
-    // Inicializamos el gestor de entrada (joystick)
-    inicializarEstados();
 
     while (ventana.isOpen()) {
+        std::stringstream sStream;
+        if (hayJoystickConectado()) {
+            sStream << "CONECTADO: " << nombreJoystick();
+            text.setFillColor(sf::Color::Green);
+        } else {
+            sStream << "DESCONECTADO";
+            text.setFillColor(sf::Color::Red);
+        }
+        text.setString(sStream.str());
         // 1) Procesamos eventos de ventana y joystick
         procesarEventos(ventana);
 
@@ -42,6 +62,7 @@ int main() {
         */
         // 3) Render (vacío)
         ventana.clear();
+        ventana.draw(text);
         ventana.display();
 
         // 4) Pequeña pausa para no saturar demasiado la consola
