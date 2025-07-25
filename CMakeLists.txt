@@ -25,6 +25,7 @@ find_package(SFML 3.0 COMPONENTS System Window Graphics REQUIRED)
 
 add_executable(tetris
         src/main.cpp
+        src/tableroFondo.cpp
 )
 
 

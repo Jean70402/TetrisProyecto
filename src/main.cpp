@@ -6,6 +6,12 @@
 #include <sstream>
 // Incluimos tus gestores tal cual
 #include "gestorEntrada.cpp"
+#include "tableroFondo.cpp"
+//Carga de clases
+
+TableroFondo fondo;
+
+
 void cargarFuente(sf::Font&font,const std::string& str ) {
     if (!font.openFromFile(str)) {
         std::cerr<< "No se pudo cargar la fuente::"<<"!!!"<< std::endl;
@@ -62,7 +68,11 @@ int main() {
         */
         // 3) Render (vacío)
         ventana.clear();
+        //Aqui van los eventos de dibujo
         ventana.draw(text);
+        fondo.dibujar(ventana);
+
+        //Aqui terminan los eventos de dibujo
         ventana.display();
 
         // 4) Pequeña pausa para no saturar demasiado la consola
