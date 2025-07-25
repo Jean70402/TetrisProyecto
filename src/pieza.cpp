@@ -32,12 +32,21 @@ public:
 
     void rotarDerecha() {
         size_t n = forma.size();
-        std::vector<std::vector<int>> nueva(n, std::vector<int>(n));
+        std::vector nueva(n, std::vector<int>(n));
         for (size_t i = 0; i < n; ++i)
             for (size_t j = 0; j < n; ++j)
                 nueva[j][n - 1 - i] = forma[i][j];
         forma = nueva;
     }
+    void rotarIzquierda() {
+        size_t n = forma.size();
+        std::vector nueva(n, std::vector<int>(n));
+        for (size_t i = 0; i < n; ++i)
+            for (size_t j = 0; j < n; ++j)
+                nueva[n - 1 - j][i] = forma[i][j];
+        forma = nueva;
+    }
+
 
     void moverAbajo() { y++; }
     void moverIzquierda() { x--; }

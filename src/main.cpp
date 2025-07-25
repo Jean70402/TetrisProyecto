@@ -69,8 +69,9 @@ int main() {
 
         if (fuePresionada(Accion::IZQUIERDA)) piezaActual.moverIzquierda();
         if (fuePresionada(Accion::DERECHA))   piezaActual.moverDerecha();
-        if (fuePresionada(Accion::ABAJO))     piezaActual.moverAbajo();
+        if (fuePresionada(Accion::ARRIBA))     piezaActual.moverAbajo();
         if (fuePresionada(Accion::ACCION1))   piezaActual.rotarDerecha();
+        if (fuePresionada(Accion::ACCION1))   piezaActual.rotarIzquierda();
 
 
 
